@@ -1,10 +1,11 @@
-asdasdasdasd
+№1
 
-| Сравнительная таблица возможностей |
-| ---- | ---- |
+
+Сравнительная таблица возможностей 
 | Критерий           | NGINX                   |	Kong	        | Traefik	         |
+| ---- | ---- | ---- | ---- |
 | Маршрутизация      |	+ (настройка в конфиге) |	+ (гибкая)   | + (динамическая)	|
-| Аутентификация     |	+ (Lua/JWT)             |	++ (плагины) |	+ (middleware)	  |
+| Аутентификация     |	+ (Lua/JWT)             |	++ (плагины) |	+ (middleware)	  | 
 | Терминация HTTPS   |	+ (SSL/TLS)             |	+ (SSL/TLS)  | + (Auto SSL)     |	
 | Производительность |	+++                     |	++           |	+                |
 
@@ -16,3 +17,18 @@ asdasdasdasd
 Amazon API Gateway
 Oracle API Gateway
 Google API Gateway
+
+№2
+
+| Критерий	| RabbitMQ |	Apache Kafka |	NATS (JetStream) |	Amazon SQS/SNS |
+| ---- | ---- | ---- | ---- | ---- |
+| Кластеризация и отказоустойчивость |	+ (Mirrored Queues)	| +++ (Partition Replication)	| ++ (Raft Consensus)	| + (Managed Service)
+| Хранение сообщений на диске        |	+ (Persistent Queues)	| +++ (Log Segments)	| ++ (JetStream)	| + (SQS)
+| Скорость работы                    |	++ (AMQP, Erlang)	| +++ (High Throughput)  | +++ (Low Latency)	| + (Managed, но задержки)
+| Поддержка форматов                 |	+ (любые данные)	| + (бинарные/текст)	| + (любые данные)	| + (текст/JSON)
+| Разграничение прав доступа         |	++ (VHosts, ACL)	| + (Kafka ACL)	| + (NATS 2.0 Auth)	| ++ (IAM Policies)
+|Простота эксплуатации               |	++ (лёгкий в настройке)	| – (сложный ZooKeeper)	| ++ (простая настройка)	| +++ (fully managed)
+
+
+лучший выбор: kafka
+соответствует всем нашим критериям и имеет преимущество по определенным параметрам.
