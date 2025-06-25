@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ping-pod
+  namespace: net
+spec:
+    containers:
+    - name: testtool
+      image: wbitt/network-multitool
+      imagePullPolicy: IfNotPresent
