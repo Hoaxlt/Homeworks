@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mounted
+  namespace: net
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multitool
+  template:
+    metadata:
+      labels:
+        app: multitool
+    spec:
+      containers:
+      - name: app1
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        command: ['sh', '-c', 'while true; do echo logging! >> /output/mylogs.txt; sleep 5; done']
+        volumeMounts:
+        - name: vol
+          mountPath: /output
+      - name: app2
+        image: wbitt/network-multitool
+        volumeMounts:
+        - name: vol
+          mountPath: /output
+      volumes:
+      - name: vol
+        emptyDir: {}
