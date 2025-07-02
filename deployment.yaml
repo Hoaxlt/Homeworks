@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mounted-pv
+  namespace: net
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multitool
+  template:
+    metadata:
+      labels:
+        app: multitool
+    spec:
+      containers:
+      - name: app1
+        image: busybox
+        # imagePullPolicy: IfNotPresent
+        command: ['sh', '-c', 'while true; do echo logging! >> /output/mylogs.txt; sleep 5; done']
+        volumeMounts:
+        - mountPath: "/output"
+          name: example-volume
+      - name: app2
+        image: wbitt/network-multitool
+        # imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - mountPath: "/output"
+          name: example-volume
+      volumes:
+      - name: example-volume
+        persistentVolumeClaim:
+          claimName: example-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: example-pvc
+  namespace: net
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: example-pv
+  namespace: net
+spec: 
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  hostPath:
+    path: "/mnt/data"
+---

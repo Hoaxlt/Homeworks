@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pv-nfs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multitool
+  template:
+    metadata:
+      labels:
+        app: multitool
+    spec:
+      containers:
+      - name: app1
+        image: wbitt/network-multitool
+        # imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - mountPath: "/output"
+          name: volume-nfs
+      volumes:
+      - name: volume-nfs
+        persistentVolumeClaim:
+          claimName: pvc-nfs
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-nfs
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: "microk8s-hostpath"
+  resources:
+    requests:
+      storage: 1Gi
