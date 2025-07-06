@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-map-deployment
+  namespace: net
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multitool
+  template:
+    metadata:
+      labels:
+        app: multitool
+    spec:
+      containers:
+      - name: app1
+        image: nginx
+        # imagePullPolicy: IfNotPresent
+        ports:
+        - name: nginx
+          containerPort: 80
+        volumeMounts:
+        - name: nginx-index
+          mountPath: /usr/share/nginx/html/index.html
+          subPath: index.html
+      - name: app2
+        image: wbitt/network-multitool
+        ports:
+        - name: multitool
+          containerPort: 8080
+        env:
+        - name: HTTP_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: config-nginx
+              key: port
+        # imagePullPolicy: IfNotPresent
+      volumes:
+      - name: nginx-index
+        configMap:
+          name: config-nginx-index
+
