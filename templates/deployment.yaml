@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.label}}
+  name: chart-deploy-3
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: web
+  replicas: {{ .Values.replicas }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.label }}
+    spec:
+      containers:
+      - name: {{ .Values.container.name }}
+        image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+        # command: ['--config.file=/etc/prometheus/prometheus.yml', '--storage.tsdb.path=/prometheus', '--web.console.libraries=/etc/prometheus/console_libraries', '--web.console.templates=/etc/prometheus/consoles', '--storage.tsdb.retention.time=200h', '--web.enable-lifecycle']
+
+        volumeMounts:
+          - name: prometheus
+            mountPath: 'etc/prometheus:Z'
+        ports:
+        - containerPort: 9090
+      volumes:
+      - name: prometheus
+        emptyDir: {}
+
+
+
+
+

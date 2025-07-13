@@ -1,0 +1,16 @@
+container:
+  name: my-app
+
+namespace: tests
+
+label: web
+
+image:
+  name: prom/prometheus
+  tag: v2.24.1
+
+ports:
+  prometheus: 9090
+
+service:
+  name: prom-svc
