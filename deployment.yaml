@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: web
+  name: nginx
+  annotations:
+    kubernetes.io/change-cause: "update 1.3"
+  namespace: net
+spec:
+  selector:
+    matchLabels:
+      app: web
+  replicas: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 100%
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.28
+        ports:
+        - name: nginx
+          containerPort: 80
+      - name: multitool
+        image: wbitt/network-multitool
+        ports:
+        - name: multitool
+          containerPort: 8080
+        command: ["sh", "-c", "sleep infinity"]
+        
