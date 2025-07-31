@@ -7,25 +7,34 @@
 4. Фронтенд обрабатывает внешние запросы быстро, отдавая статику. Потребляет не более 50 МБ ОЗУ на каждый экземпляр, 0.2 ядра. 5 копий.
 5. Бекенд потребляет 600 МБ ОЗУ и по 1 ядру на копию. 10 копий.
 
+# решение:
 Минимальные требования к ресурсам для мастер-ноды в Kubernetes включают не менее 2 vCPU, 4 ГБ оперативной памяти и 20 ГБ дискового пространства, сообщают ресурсы Cloud.ru и Habr. Однако, для стабильной работы кластера и возможности масштабирования, рекомендуется использовать 4 vCPU, 8 ГБ оперативной памяти и 50 ГБ дискового пространства. 
 
-# 1) BD | RAM = 4 gb * 3 replicas = 12 gb | CPU = 1 * 3 replicas = 3 cpu | MEM = 1TB hdd
-# 2) Cash | RAM = 4 gb * 3 replicas = 12gb | CPU = 1 * 3 replicas = 3 cpu
-# 3) frontend | RAM = 0.05 * 5 = 0.25 gb | CPU = 0.2 * 5 replicas = 1 cpu 
 
-1) BD | RAM = 4 gb                      | CPU = 1  | MEM = 1TB hdd
-2) Cash | RAM = 4 gb                    | CPU = 1 
-3) frontend | RAM = 0.05 * 5 = 0.25 gb  | CPU = 0.2 
-4) backend | RAM = 0.6 * 10 replicas = 6 gb| CPU 1 * 10 replicas = 10 cpu
+Надеюсь я правильно понял, что там, где написано просто "потребляет 4 гб" - это учитывая и копии тоже. В самом конце есть и другой расчет с потреблением на каждую копию.
 
-overall: 
-RAM: 4 + 4 + 0.25(1) + 6 + = 15 GB      4(master)
-CPU: 1 + 1 + 0.2(1) + 10 + = 13 CPU     2(master)
-MEM: 1TB                                20gb (master)
+1) BD       | RAM = 4 gb                      | CPU = 1  | MEM = 1TB hdd
+2) Cash     | RAM = 4 gb                      | CPU = 1 
+3) frontend | RAM = 0.05 * 5 = 0.25 gb        | CPU = 0.2 
+4) backend  | RAM = 0.6 * 10 replicas = 6 gb  | CPU 1 * 10 replicas = 10 cpu
+
+Итого: 
+RAM: 4 + 4 + 0.25(1) + 6 + = 15 GB   +   4(master)
+CPU: 1 + 1 + 0.2(1) + 10 + = 13 CPU  +   2(master)
+MEM:                          1TB    +   20gb (master)
 
 
-optimal - 4 nodes with parametrs:
-NODE = 8 RAM | 4 CPU | 1 TB
-avail = 6.1 RAM | 3,925 CPU | 1 TB  (Zanimaet OS + kubelet) 
+Оптимально- 4 ноды c параметрами:
+NODE       = 8 RAM | 4 CPU | 1 TB
+будет доступно  = 6.1 RAM | 3,925 CPU | 1 TB  (какую то часть занимает OS + kubelet) 
+![](https://github.com/Hoaxlt/Homeworks/blob/hw-components/Screenshot_1.png)
+![](https://github.com/Hoaxlt/Homeworks/blob/hw-components/Screenshot_2.png)
 
-8,347 * 4  = 33.388 rub + 2753 = 36141 rub
+8347 * 4  = 33388 rub + 2753 rub (мастер нода) = 36141 rub
+
+
+
+
+1) BD       | RAM = 4 gb * 3 replicas = 12 gb | CPU = 1 * 3 replicas = 3 cpu | MEM = 1TB hdd
+2) Cash     | RAM = 4 gb * 3 replicas = 12gb  | CPU = 1 * 3 replicas = 3 cpu
+3) frontend | RAM = 0.05 * 5 = 0.25 gb        | CPU = 0.2 * 5 replicas = 1 cpu 
